@@ -1,0 +1,41 @@
+---
+title: "Mark Bergh Fixed Income Understanding"
+format: pdf
+editor: source
+pdf-engine: pdflatex
+---
+
+## What are Bonds?
+
+Bonds are financial instruments that represent a collection of future cashflows. These cashflows will be $N \geq 0$ "coupon payments" and one payment of the principle or "par" value. For example, should an investor purchase a 5 year \$100 5% Treasury bond "at par value", and suppose the bond pays coupons semi-annually, she would be entitled to receive 10 coupon payments of \$2.5 every six months and one payment of \$100 at the end of 5 years.
+
+## Bond Valuation
+
+Assuming no credit risk, the price of a bond is the sum of the present values of
+
+# Payment Frequency
+
+## Yield
+
+## Duration
+
+## Convexity
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

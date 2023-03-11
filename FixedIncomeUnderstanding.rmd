@@ -1,0 +1,90 @@
+---
+title: "Fixed Income Understanding"
+author: "Mark Bergh"
+date: "2023-03-02"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What are Bonds?
+
+Bonds are financial instruments that represent a collection of future cashflows. These cashflows will be $N \geq 0$ "coupon payments" and one payment of the principle or "par" value. For example, should an investor purchase a 5 year \$100 5% Treasury bond "at par value", and suppose the bond pays coupons semi-annually, she would be entitled to receive 10 coupon payments of \$2.5 every six months and one payment of \$100 at the end of 5 years.
+
+## Bond Valuation
+
+Assuming no credit risk, the price of a bond is the sum of the present values of its future cashflows. The present value of a cashflow is the value of that cashflow, discounted at a given rate. In such fashion we can calculate the price $P$ of a bond with coupon payments $c$ and principle $M$ as:
+$$
+P = \sum_{i=1}^n\frac{c}{(1+r_i)^i}+\frac{M}{(1+r_n)^n}
+$$
+where $r_i$ is the periodic discount rate for the $i$'th cashflow. 
+
+### Payment Frequency
+
+Care should be taken to ensure that analysts understand the implications when coupons are paid multiple times per annum.
+Some things to keep in mind
+* If a bond with par value $P$ has a coupon of $X\%$ with quarterly payments, the payments will be $\$\frac{X \times P}{4 \times 100}$
+* 
+
+## Yield
+
+The yield to maturity of a bond is the annual discount rate that you would need to use in order for the present value of the bond's cashflows to equal the market price of the bond.
+
+Solve for $r$, given $P, M, c$:
+$$
+P = \sum_{i=1}^n\frac{c}{(1+r)^i}+\frac{M}{(1+r)^n}
+$$
+The annual yield will then be either $(1+r)^m$ (effective yield) or $m\times r$ (bond equivalent yield // This is not totally clear to me.) where $m$ is the number of periods in a year.
+
+From the equation for bond valuation, we can see that there is an inverse relationship between the price of a bond and its yield, all else being equal.
+
+### Yield Curve Spot Rate Curve
+
+Plotting the yields for bonds with varying maturities but similar credit risk results in the so-call yield curve. The shape of the yield curve contains information about market expectations over different time-frames. For example, in the context of a Treasury yield curve, the shape of the short-term (0-5 year) yield curve reflects expectations about monetary policy, while the long-term section contains information about expectations of fiscal policy.
+
+## Rates: Spot and Forward
+
+Of interest to us are the spot (or zero) rates offered by a bond issuer, particularly a national Treasury. The spot rate is the yield on a bond paying all interest at maturity. In general, issuers do not offer bonds of this type, so the spot rate must be inferred from the yields of bonds using a bootstrapping procedure.
+
+One reason we are interested in spot rates is that it gives us an estimate for an appropriate discount rate for cashflows at a given time point (the $r_i$s in the above equation).
+
+Using the Spot Rate curve, we can derive the Forward Rates implied by a set of bond yields. The forward rate is the interest rate at some future point in time that would need to be earned to equal the return from investing a given bond. This should not be confused with the market's expected interest rate in the future, but more like a way to hedge against future interest rates.
+
+## Volatility
+
+// This is likely inaccurate.
+As discussed earlier, there is an inverse relationship between the price of a bond and its yield. This same property applies to a portfolio of bonds, for some measure of the yield of a portfolio. Of interest is the degree of volatility in price implied by changes in yields and vice versa. We have developed a number of measures to approximate this volatility.
+
+```{r}
+yield_seq = seq(0,0.5, length=100)
+
+get_price = function(yield){
+c = 5
+M=100
+n=20
+
+price = 0
+for (i in 1:n){
+  price = price + c/(1+yield)^i
+}
+price = price + M/(1+yield)^n
+return(price)
+}
+
+prices = sapply(yield_seq, get_price)
+plot(prices~yield_seq, type = "l", ylab = "Price", xlab = "Yield")
+```
+
+### Duration
+
+One measure of volatility of the price of a portfolio of bonds as yields change is duration.
+
+### Convexity
+
+## Questions
+
+1. The whole Yield-Price thing still confuses me. I would understand more if yield was something we could calculate independently of price. For example, can we ever say "We expect yields to increase by 1%, which will *cause* the price to drop X%"? How can we expect yields to do anything without first expecting price to do something? My current thinking is that this has more to do with volatility; Something like "High-Yield bond prices are less volatile in the presence of changing yields compared to Low-Yield", but even there I am confused at how we can measure something like "yield volatility". It all feels a bit circular and I don't know which factors are driving the others.
+
+2. What is the relationship between Central Bank Interest Rates and Bond Yield? If interest rates are very high, I would assume that institutions are more likely to issue bonds as those would be an alternative way to raise capital. On the other hand, I don't actually know the effects of raising interest rates on investment opportunities. Do banks offer a higher return to institutions who lend them money?  
